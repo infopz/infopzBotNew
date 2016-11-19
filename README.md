@@ -7,10 +7,6 @@ It must contains in the first line the apiKey of telegram bot and in the second 
 ## Features
 * View the results of Serie A's matches, also in Real-Time
 * View the hourly and daily weather for your city!
-* Display the latest osu score of a specified user
-* Display the current League of Legends free rotation
-* Create a public daily journal
-
-
+* Change Euro in Dollars and Dollars in Euro
 
 **License**: MIT
