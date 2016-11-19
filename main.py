@@ -7,30 +7,30 @@ import sport
 
 #BOT COMMANDS
 def startCommand(chat, user):
-  mess = 'Ciao *'+user['first_name']+'*\nBenvenuto su @infopzBot, ecco i comandi che puoi usare:\n*/seriea* : Ti fornisce anche in tempo reale risultati delle partite e la classifica di Serie A\n*/meteo* : Ti da le previsioni meteo orarie o giornaliere per la tua città\n*/cambio* : Effettua il cambio valuta Euro-Dollaro e viceversa\n\nPer qualsiasi informazione contatta @infopz'
-  telegram.sendMess(mess, chat['id']) 
-  print('@'+user['username']+' - /start')
+  mess = 'Ciao *'+user['first_name']+'* \U0001F44B\nBenvenuto su @infopzBot, ecco i comandi che puoi usare:\n*\U000026BD/seriea*: Ti fornisce anche in tempo reale risultati delle partite e la classifica di Serie A\n*\U0001F324/meteo* : Ti da le previsioni meteo orarie o giornaliere per la tua città\n\U0001F4B1*/cambio* : Effettua il cambio valuta Euro-Dollaro e viceversa\n\n\U00002B50Se ti trovi bene con questo Bot metti una recensione positiva su Telegram Italia, grazie\nhttp://www.telegramitalia.it/infopzbot/\n\n\U0001F527Questo Bot è completamente open-source, puoi trovare il progetto qui:\nhttps://github.com/infopz/infopzBotNew\n\nPer qualsiasi informazione contatta @infopz'
+  telegram.sendMess(mess, chat['id'], webPrev=True) 
+  printAction('/start', 'command')
 
 def helpCommand(chat, user):
   mess = 'Ecco i comandi che puoi usare:\n*/seriea* : Ti fornisce (anche in tempo reale) i risultati delle partite e la classifica di Serie A\n*/meteo* : Ti da le previsioni meteo orarie o giornaliere per la tua città\n*/cambio* : Effettua il cambio valuta Euro-Dollaro e viceversa\n\nPer qualsiasi informazione contatta @infopz'
   telegram.sendMess(mess, chat['id']) 
-  print('@'+user['username']+' - /help')
+  printAction('/help', 'command')
 
 def helloCommand(chat, user):
   telegram.sendMess('Hello World', chat['id'])
-  print('@'+user['username']+' - /hello')
+  printAction('/hello', 'command')
 
 def cambioCommand(chat, user):
-  telegram.sendMess('/cambio: inserisci un valore seguito dal simbolo della valuta', chat['id'])
+  telegram.sendMess('/cambio: inserisci un valore seguito dal simbolo della valuta (€ o $)', chat['id'])
   var['comm'] = 'cambio'
-  print('@'+user['username']+' - /cambio')
+  printAction('/cambio', 'command')
 
 def serieaCommand(chat, user):
   keyb = [["\U0001F5DEPartite Giornata", "\U0001F51BPartite di Oggi"], ["\U0001F51CPartite di Domani", "\U0001F4CAClassifica"], ["\U000023F1RisultatiLive", "Ris ScorsaGiorn"]]
   keyb = telegram.createKeyboard(keyb)
   telegram.sendMess('/seriea: seleziona una opzione', chat['id'], reply_markup=keyb)
   var['comm'] = 'seriea'
-  print('@'+user['username']+' - /seriea')
+  printAction('/seriea', 'command')
 
 def meteoCommand(chat, user):
   keyb = [["\U0001F4CDModena", "\U0001F30DAltra città"]]
@@ -42,8 +42,8 @@ def meteoCommand(chat, user):
   meteo['firstFase'] = True
   meteo['chiediCitt'] = False
   meteo['BtipoPrev'] = False
-  print('@'+user['username']+' - /meteo')
-  
+  printAction('/meteo', 'command')
+
 #FUNCIONS FOR COMMANDS
 def useMeteo(m):
   if meteo['BtipoPrev'] == True:
@@ -160,7 +160,8 @@ def mess_received(chat, message, user):
       serieaOutput(message['text'], chat, user)
     elif var['comm'] == 'meteo':
       useMeteo(message['text'])
-    print('@'+user['username']+' - '+message['text'])
+    if var['comm'] != '':
+      printAction(message['text'], 'messsage')
 
 def fmeteoDom(num, nome):
    cord=altriCom.trovaCord('Modena')
@@ -178,15 +179,19 @@ def timers():
         l = lines.split(' ', 2)
         fmeteoDom(l[0], l[1][:-1])
     listMeteo.close()
-  if (h == 24 or h == 12) and m == 0:
+  if (h == 0 or h == 12) and m == 0:
     var['giornata'] = sport.trovaGiornata()
-  if h == 24 and m == 0:
+  if h == 0 and m == 0:
     print('ContLive utilizzati oggi: '+var['contLive'])
     var['contLive'] = 0 
 
 def startAction():
   var['giornata'] = sport.trovaGiornata()
     
+def printAction(mess, typ):
+  tim = time.strftime('%a %H:%M')
+  typ = typ.upper()
+  print(tim+' - '+typ+' - '+user['username']+': '+mess)
 
 var = {'off': 0, 'comm': '', 'contLive': 0}
 meteo = {'citta' : '', 'tipoPrev': ''}

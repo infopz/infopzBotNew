@@ -34,11 +34,12 @@ def getDataAndTimer(off):
       else:
         time.sleep(0.5)
 
-def sendMess(text, chat_id, reply_to_message_id=None, reply_markup=Mkey):
+def sendMess(text, chat_id, reply_to_message_id=None, reply_markup=Mkey, webPrev=False):
   par = {
     'chat_id': chat_id, 
     'text': text, 
     'parse_mode': 'Markdown', 
     'reply_to_message_id': reply_to_message_id, 
-    'reply_markup' : reply_markup}
+    'reply_markup' : reply_markup,
+    'disable_web_page_preview': webPrev}
   a = requests.get("https://api.telegram.org/bot"+key+"/sendMessage", params=par) 
